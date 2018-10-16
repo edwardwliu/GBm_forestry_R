@@ -4,6 +4,7 @@ library(glmnet)
 library(ggplot2)
 library(xgboost)
 source("src/gradient_boosting.R")
+source("src/gb_forestry.R")
 
 # Define all estimators:
 
@@ -24,8 +25,10 @@ estimator_grid <- list(
   
   "xgboost_1" = function(Xobs, Yobs)
     xgboost(data = data.matrix(Xobs), label= Yobs, nrounds = 10),
-  "gradient_boosting_1" = function(Xobs, Yobs)
-    gradient_boosting(Xobs, Yobs, n_iterations = 10)
+  "gb_rpart_1" = function(Xobs, Yobs)
+    gradient_boosting(Xobs, Yobs, n_iterations = 10),
+  "gb_forestry_1" = function(Xobs, Yobs)
+    gradient_boosting_forestry(Xobs, Yobs, n_iterations = 10)
 )
 
 
@@ -61,7 +64,10 @@ predictor_grid <- list(
     feat <- data.matrix(feat)
     return(predict(estimator, feat))
   },
-  "gradient_boosting_1" = function(estimator, feat) {
+  "gb_rpart_1" = function(estimator, feat) {
+    return(predict(estimator, feat))
+  },
+  "gb_forestry_1" = function(estimator, feat) {
     return(predict(estimator, feat))
   }
 )
