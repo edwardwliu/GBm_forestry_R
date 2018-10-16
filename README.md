@@ -8,5 +8,6 @@ A gradient boosting algorithm implemented in R.
 3. Add hyperparameters.
 
 *Milestone 2*: Implement algorithm in C (with speed, performance, etc.)
+
 *Milestone 3*: R package compatibility.
 
