@@ -1,6 +1,6 @@
-library(rpart)
+library(forestry)
 
-gradient_boosting <- function(x_values, y_values, n_iterations) {
+gradient_boosting_forestry <- function(x_values, y_values, n_iterations) {
   y_mean <- mean(y_values)
   y_predicted <- rep(y_mean, length(y_values))
   
@@ -8,7 +8,7 @@ gradient_boosting <- function(x_values, y_values, n_iterations) {
   tree_list <- list()
   
   h_i <- function(tree_model) {
-    prediction <- predict(tree_model, data = as.data.frame(x_values))
+    prediction <- predict(tree_model, x_values)
     return(prediction)
   }
   
@@ -17,9 +17,7 @@ gradient_boosting <- function(x_values, y_values, n_iterations) {
     residuals <- y_values - y_predicted
     
     # Train tree predictor -----------------------------------------------------
-    cart_training_set <- data.frame(output = residuals,
-                                    x_values)
-    tree_fit <- rpart(output ~ ., data = cart_training_set)
+    tree_fit <- forestry(x = x_values, y = residuals)
     tree_list[[i]] <- tree_fit
     
     # Find gamma_min -----------------------------------------------------------
@@ -50,11 +48,11 @@ gradient_boosting <- function(x_values, y_values, n_iterations) {
     tree = tree_list,
     iter = n_iterations
   )
-  class(model) <- 'gradient_boost'
+  class(model) <- 'gb_forestry'
   return(model)
 }
 
-predict.gradient_boost <- function(model_object, x_values) {
+predict.gb_forestry <- function(model_object, x_values) {
   y_mean <- model_object$mean
   gamma_vec <- model_object$gamma
   tree_list <- model_object$tree
@@ -62,11 +60,12 @@ predict.gradient_boost <- function(model_object, x_values) {
   
   y_predicted <- rep(y_mean, (nrow(x_values)))
   h_i <- function(tree_model) {
-    prediction <- predict(tree_model, newdata = as.data.frame(x_values))
+    prediction <- predict(tree_model, x_values)
     return(prediction)
   }
   
   for (i in 1:n_iterations) {
+    print(tree_list[[i]])
     y_predicted <- y_predicted + gamma_vec[i] * h_i(tree_list[[i]])
   }
   return(y_predicted)
