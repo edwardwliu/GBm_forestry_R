@@ -8,7 +8,7 @@ gradient_boosting <- function(x_values, y_values, n_iterations) {
   tree_list <- list()
   
   h_i <- function(tree_model) {
-    prediction <- predict(tree_model, data = as.data.frame(x_values))
+    prediction <- predict(tree_model, newdata = as.data.frame(x_values))
     return(prediction)
   }
   
