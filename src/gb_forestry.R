@@ -1,6 +1,6 @@
 library(forestry)
 
-gradient_boosting_forestry <- function(x_values, y_values, n_iterations) {
+gradient_boosting_forestry <- function(x_values, y_values, n_iterations, ...) {
   y_mean <- mean(y_values)
   y_predicted <- rep(y_mean, length(y_values))
   
@@ -17,7 +17,7 @@ gradient_boosting_forestry <- function(x_values, y_values, n_iterations) {
     residuals <- y_values - y_predicted
     
     # Train tree predictor -----------------------------------------------------
-    tree_fit <- forestry(x = x_values, y = residuals)
+    tree_fit <- forestry(x = x_values, y = residuals, ntree = 1, ...)
     tree_list[[i]] <- tree_fit
     
     # Find gamma_min -----------------------------------------------------------
