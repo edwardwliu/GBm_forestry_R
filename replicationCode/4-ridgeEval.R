@@ -1,5 +1,5 @@
-if (dir.exists("~/Dropbox/ridgeEvaluation/")) {
-  setwd("~/Dropbox/ridgeEvaluation/")
+if (dir.exists("~/Dropbox/GBm_forestry_R/")) {
+  setwd("~/Dropbox/GBm_forestry_R/")
 } else if (dir.exists("~/ridgeEvaluationCode/")) {
   setwd("~/ridgeEvaluationCode/")
 } else if (dir.exists("~/ridgeEvaluation/")) {
