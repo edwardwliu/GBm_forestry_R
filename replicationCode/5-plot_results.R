@@ -1,9 +1,7 @@
-if (dir.exists("~/Dropbox/ridgeEvaluation/")) {
-  setwd("~/Dropbox/ridgeEvaluation/")
-} else if (dir.exists("~/ridgeEvaluationCode/")) {
-  setwd("~/ridgeEvaluationCode/")
-} else if (dir.exists("~/ridgeEvaluation/")) {
-  setwd("~/ridgeEvaluation/")
+if (dir.exists("~/Dropbox/GBm_forestry_R/")) {
+  setwd("~/Dropbox/GBm_forestry_R/")
+} else if (dir.exists("~/GBm_forestry_R/")) {
+  setwd("~/GBm_forestry_R/")
 } else {
   stop("wd was not set correctly")
 }
