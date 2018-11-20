@@ -1,6 +1,6 @@
 library(rpart)
 
-gradient_boosting <- function(x_values, y_values, n_iterations) {
+gradient_boosting_rpart <- function(x_values, y_values, n_iterations) {
   y_mean <- mean(y_values)
   y_predicted <- rep(y_mean, length(y_values))
   

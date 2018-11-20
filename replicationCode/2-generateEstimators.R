@@ -3,9 +3,9 @@ library(ranger)
 library(glmnet)
 library(ggplot2)
 library(xgboost)
-source("src/gradient_boosting.R")
-source("src/gb_forestry.R")
 source("src/gb_cv.R")
+source("src/gb_forestry.R")
+source("src/gb_part.R")
 
 # Define all estimators:
 
@@ -27,7 +27,7 @@ estimator_grid <- list(
   "xgboost_1" = function(Xobs, Yobs)
     xgboost(data = data.matrix(Xobs), label= Yobs, nrounds = 10),
   "gb_rpart" = function(Xobs, Yobs)
-    gradient_boosting(Xobs, Yobs, n_iterations = 10),
+    gradient_boosting_rpart(Xobs, Yobs, n_iterations = 10),
   "gb_forestry" = function(Xobs, Yobs)
     gradient_boosting_forestry(Xobs, Yobs, n_iterations = 10),
   "gb_cv" = function(Xobs, Yobs)
