@@ -83,6 +83,30 @@ datasets_grid[["artificial-LM"]] <- list(
   "test" = lm_artificial_ds[(n_train + 1):(n_train + n_test), ])
 
 
+# Large LM-RF Hybrid with big leaves and high penalty 
+# The idea of this simulation is based on a simulation by Theo Saarinen
+bike <- read.csv("replicationCode/bike.csv", header = TRUE)
+bike <- bike[1:8200,-17]
+
+bike_x <- bike[,c(-1, -2, -16)]
+bike_y <- bike[,16]
+n_bike <- nrow(bike_x)
+
+test_id <- sort(sample(n_bike, size = n_bike/2))
+train_id <- (1:n_bike)[!(1:n_bike) %in% test_id]
+
+ridge <- forestry(x = bike_x, y = bike_y, nodesizeStrictSpl = 25)
+
+
+imputed_y <- predict(ridge, bike_x) + rnorm(nrow(bike_x), sd = 10)
+
+ridge_simulated_data <- data.frame(bike_x, y = imputed_y)
+
+datasets_grid[["Bike-LM-RF-smooth"]] <- list(
+  "train" = ridge_simulated_data[train_id, ], 
+  "test" = ridge_simulated_data[test_id, ])
+
+
 str(datasets_grid)
 
 
