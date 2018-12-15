@@ -1,13 +1,14 @@
 library(forestry)
 
-gradient_boosting_forestry <- function(x_values, y_values, n_iterations, ...) {
+gradient_boosting_forestry <- function(x_values, y_values, n_iterations, 
+                                       eta = 0.3, splitratio = 1, ...) {
   y_mean <- mean(y_values)
   y_predicted <- rep(y_mean, length(y_values))
   
   gamma_vec <- rep(NA, n_iterations)
   tree_list <- list()
   
-  h_i <- function(tree_model) {
+  h_i <- function(tree_model, test_values) {
     prediction <- predict(tree_model, x_values)
     return(prediction)
   }
@@ -17,7 +18,13 @@ gradient_boosting_forestry <- function(x_values, y_values, n_iterations, ...) {
     residuals <- y_values - y_predicted
     
     # Train tree predictor -----------------------------------------------------
-    tree_fit <- forestry(x = x_values, y = residuals, ntree = 1, ...)
+    tree_fit <- forestry(x = x_values, y = residuals, ntree = 1, 
+                         replace = FALSE, sampsize = nrow(x_values),
+                         mtry = ncol(x_values), 
+                         nodesizeStrictSpl = max(round(nrow(x_values)/128), 1), 
+                         nodesizeStrictAvg = max(round(nrow(x_values)/128), 1), 
+                         splitratio = splitratio, splitrule = "variance", 
+                         middleSplit = TRUE)
     tree_list[[i]] <- tree_fit
     
     # Find gamma_min -----------------------------------------------------------
@@ -25,6 +32,7 @@ gradient_boosting_forestry <- function(x_values, y_values, n_iterations, ...) {
     
     best_min <- Inf
     best_gamma <- NA
+    
     for (gamma in gamma_grid) {
       fitted_values_gamma <- y_predicted + gamma * h_i(tree_fit)
       current_val <- mean((y_values - fitted_values_gamma) ^ 2)
@@ -33,7 +41,7 @@ gradient_boosting_forestry <- function(x_values, y_values, n_iterations, ...) {
         best_gamma <- gamma
       }
     }
-    gamma_vec[i] <- best_gamma
+    gamma_vec[i] <- best_gamma * eta
     
     y_predicted <- rep(y_mean, length(y_values))
     for (j in 1:i) {
