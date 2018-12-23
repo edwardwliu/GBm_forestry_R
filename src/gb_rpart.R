@@ -1,6 +1,7 @@
 library(rpart)
 
-gradient_boosting_rpart <- function(x_values, y_values, n_iterations) {
+gradient_boosting_rpart <- function(x_values, y_values, n_iterations,
+                                    eta = 0.3) {
   y_mean <- mean(y_values)
   y_predicted <- rep(y_mean, length(y_values))
   
@@ -35,7 +36,7 @@ gradient_boosting_rpart <- function(x_values, y_values, n_iterations) {
         best_gamma <- gamma
       }
     }
-    gamma_vec[i] <- best_gamma
+    gamma_vec[i] <- best_gamma * eta
     
     y_predicted <- rep(y_mean, length(y_values))
     for (j in 1:i) {
@@ -50,11 +51,11 @@ gradient_boosting_rpart <- function(x_values, y_values, n_iterations) {
     tree = tree_list,
     iter = n_iterations
   )
-  class(model) <- 'gradient_boost'
+  class(model) <- 'gb_rpart'
   return(model)
 }
 
-predict.gradient_boost <- function(model_object, x_values) {
+predict.gb_rpart <- function(model_object, x_values) {
   y_mean <- model_object$mean
   gamma_vec <- model_object$gamma
   tree_list <- model_object$tree
