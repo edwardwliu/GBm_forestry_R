@@ -10,70 +10,20 @@ source("src/gb_part.R")
 # Define all estimators:
 
 estimator_grid <- list(
-  "ranger_1" = function(Xobs, Yobs)
-    ranger(Yobs ~., data = cbind(Xobs, Yobs)),
-  "ranger_2" = function(Xobs, Yobs)
-    ranger(Yobs ~., data = cbind(Xobs, Yobs)),
-  "ranger_3" = function(Xobs, Yobs)
-    ranger(Yobs ~., data = cbind(Xobs, Yobs)),
-
-  "glmnet_1" = function(Xobs, Yobs)
-    glmnet(x = data.matrix(Xobs), y = Yobs, alpha = 1),
-  "glmnet_2" = function(Xobs, Yobs)
-    glmnet(x = data.matrix(Xobs), y = Yobs, alpha = 0),
-  "glmnet_3" = function(Xobs, Yobs)
-    glmnet(x = data.matrix(Xobs), y = Yobs, alpha = .5),
-  
   "xgboost_1" = function(Xobs, Yobs)
-    xgboost(data = data.matrix(Xobs), label= Yobs, nrounds = 10),
-  "gb_rpart" = function(Xobs, Yobs)
-    gradient_boosting_rpart(Xobs, Yobs, n_iterations = 10),
+    xgboost(data = data.matrix(Xobs), label= Yobs, nrounds = 20),
   "gb_forestry" = function(Xobs, Yobs)
-    gradient_boosting_forestry(Xobs, Yobs, n_iterations = 10),
-  "gb_cv" = function(Xobs, Yobs)
-    gradient_boosting_cv(Xobs, Yobs, n_iterations = 10)
+    gradient_boosting_forestry(Xobs, Yobs, n_iterations = 20, eta = 0.3)
 )
 
 
 
 predictor_grid <- list(
-  "ranger_1" = function(estimator, feat) {
-    return(predict(estimator, feat)$predictions)
-  },
-  "ranger_2" = function(estimator, feat) {
-    return(predict(estimator, feat)$predictions)
-  },
-  "ranger_3" = function(estimator, feat) {
-    return(predict(estimator, feat)$predictions)
-  },
-
-  "glmnet_1" = function(estimator, feat) {
-    feat <- data.matrix(feat)
-    l <- estimator$lambda[estimator$lambda == min(estimator$lambda)]
-    return(predict(estimator, s = l, newx = feat))
-  },
-  "glmnet_2" = function(estimator, feat) {
-    feat <- data.matrix(feat)
-    l <- estimator$lambda[estimator$lambda == min(estimator$lambda)]
-    return(predict(estimator, s = l, newx = feat))
-  },
-  "glmnet_3" = function(estimator, feat) {
-    feat <- data.matrix(feat)
-    l <- estimator$lambda[estimator$lambda == min(estimator$lambda)]
-    return(predict(estimator, s = l, newx = feat))
-  },
-
   "xgboost_1" = function(estimator, feat) {
     feat <- data.matrix(feat)
     return(predict(estimator, feat))
   },
-  "gb_rpart" = function(estimator, feat) {
-    return(predict(estimator, feat))
-  },
   "gb_forestry" = function(estimator, feat) {
-    return(predict(estimator, feat))
-  },
-  "gb_cv" = function(estimator, feat) {
     return(predict(estimator, feat))
   }
 )
